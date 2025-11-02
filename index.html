@@ -1,0 +1,1324 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Network - شبكتك الاجتماعية</title>
+    <style>
+        :root {
+            --primary-color: #1877f2;
+            --secondary-color: #42b72a;
+            --bg-color: #f0f2f5;
+            --card-color: #ffffff;
+            --text-color: #1c1e21;
+            --border-color: #dddfe2;
+            --error-color: #ff4444;
+            --success-color: #00C851;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            direction: rtl;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* شاشة تسجيل الدخول */
+        .login-container {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-input {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #166fe5;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #36a420;
+        }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .error-message {
+            background: var(--error-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            background: var(--success-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* التطبيق الرئيسي */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* الهيدر */
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--bg-color);
+            color: var(--primary-color);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar-item {
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-color);
+        }
+
+        .sidebar-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* منطقة المحتوى */
+        .content-area {
+            flex: 1;
+        }
+
+        /* صفحة الرسائل */
+        .messages-page {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 600px;
+        }
+
+        .messages-container {
+            display: flex;
+            height: 100%;
+        }
+
+        /* قائمة المحادثات */
+        .conversations-sidebar {
+            width: 350px;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conversations-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .conversation-item:hover {
+            background: var(--bg-color);
+        }
+
+        .conversation-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .conversation-info {
+            flex: 1;
+        }
+
+        .conversation-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .conversation-last-message {
+            color: #65676b;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-time {
+            color: #65676b;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        /* نافذة الدردشة */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .chat-user-name {
+            font-weight: bold;
+        }
+
+        .chat-user-status {
+            color: #42b72a;
+            font-size: 0.8rem;
+        }
+
+        .messages-container-inner {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 1rem;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message-content {
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message.sent .message-content {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.received .message-content {
+            background: white;
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .message-text {
+            margin-bottom: 0.25rem;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            text-align: left;
+        }
+
+        .message-input-area {
+            display: flex;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .message-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .send-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 24px;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* حالة فارغة */
+        .empty-chat {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+            color: #65676b;
+            text-align: center;
+        }
+
+        .empty-chat-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* محادثة جديدة */
+        .new-conversation {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .new-conversation-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            color: var(--primary-color);
+        }
+
+        .search-container {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .user-result {
+            display: flex;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .user-result:hover {
+            background: var(--bg-color);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            color: #65676b;
+            font-size: 0.9rem;
+        }
+
+        /* الصفحات الأخرى */
+        .home-page, .friends-page, .profile-page {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .home-page h2, .friends-page h2, .profile-page h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* التجاوب مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .header-nav {
+                gap: 1rem;
+            }
+            
+            .conversations-sidebar {
+                width: 100%;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- سيتم تحميل التطبيق هنا -->
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+
+        // تكوين Firebase الخاص بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_WNvJdCRw9viU4xJfhDL_545zHK4u-kE",
+            authDomain: "yassine-web-2025.firebaseapp.com",
+            projectId: "yassine-web-2025",
+            storageBucket: "yassine-web-2025.firebasestorage.app",
+            messagingSenderId: "72261230105",
+            appId: "1:72261230105:web:e056fea00afa3d8d571488",
+            measurementId: "G-BG1Y78N59V"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        // جعل المتغيرات متاحة globally
+        window.firebase = { app, auth, db, analytics };
+        window.firebaseFunctions = { 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged,
+            updateProfile,
+            collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc, updateDoc, getDocs
+        };
+    </script>
+
+    <script>
+        class SocialApp {
+            constructor() {
+                this.currentUser = null;
+                this.currentPage = 'home';
+                this.conversations = [];
+                this.messages = [];
+                this.currentConversation = null;
+                this.users = {};
+                this.searchResults = [];
+                
+                this.init();
+            }
+
+            async init() {
+                // التحقق من حالة المصادقة
+                window.firebaseFunctions.onAuthStateChanged(window.firebase.auth, async (user) => {
+                    if (user) {
+                        await this.loadUserData(user);
+                        this.showApp();
+                    } else {
+                        this.showLogin();
+                    }
+                });
+
+                // إعداد معالجات الأحداث
+                this.setupEventListeners();
+            }
+
+            async loadUserData(user) {
+                try {
+                    const userDoc = await window.firebaseFunctions.getDoc(
+                        window.firebaseFunctions.doc(window.firebase.db, 'users', user.uid)
+                    );
+                    
+                    if (userDoc.exists()) {
+                        this.currentUser = {
+                            uid: user.uid,
+                            ...userDoc.data()
+                        };
+                    } else {
+                        // إنشاء مستخدم جديد إذا لم يوجد
+                        await this.createUserDocument(user);
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+            }
+
+            async createUserDocument(user) {
+                try {
+                    await window.firebaseFunctions.setDoc(
+                        window.firebaseFunctions.doc(window.firebase.db, 'users', user.uid),
+                        {
+                            name: user.displayName || user.email.split('@')[0],
+                            email: user.email,
+                            createdAt: window.firebaseFunctions.serverTimestamp(),
+                            friends: [],
+                            friendRequests: []
+                        }
+                    );
+                    
+                    this.currentUser = {
+                        uid: user.uid,
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email
+                    };
+                } catch (error) {
+                    console.error('Error creating user document:', error);
+                }
+            }
+
+            setupEventListeners() {
+                // استخدام event delegation للتعامل مع الأحداث
+                document.addEventListener('click', (e) => {
+                    // تسجيل الدخول والتسجيل
+                    if (e.target.classList.contains('switch-mode')) {
+                        this.toggleLoginSignup();
+                    }
+                    
+                    if (e.target.classList.contains('login-btn')) {
+                        this.handleLogin();
+                    }
+                    
+                    if (e.target.classList.contains('signup-btn')) {
+                        this.handleSignup();
+                    }
+                    
+                    if (e.target.classList.contains('logout-btn')) {
+                        this.handleLogout();
+                    }
+
+                    // التنقل
+                    if (e.target.classList.contains('nav-item')) {
+                        this.changePage(e.target.dataset.page);
+                    }
+
+                    if (e.target.classList.contains('sidebar-item')) {
+                        this.changePage(e.target.dataset.page);
+                    }
+
+                    // الرسائل
+                    if (e.target.classList.contains('send-button')) {
+                        this.sendMessage();
+                    }
+
+                    if (e.target.classList.contains('new-conversation-btn')) {
+                        this.showNewConversation();
+                    }
+
+                    if (e.target.classList.contains('back-button')) {
+                        this.showConversations();
+                    }
+
+                    if (e.target.classList.contains('user-result')) {
+                        this.startConversation(e.target.dataset.userId);
+                    }
+
+                    // المحادثات
+                    if (e.target.closest('.conversation-item')) {
+                        const item = e.target.closest('.conversation-item');
+                        const conversationId = item.dataset.conversationId;
+                        const userId = item.dataset.userId;
+                        this.openConversation(conversationId, userId);
+                    }
+                });
+
+                // إدخال الرسالة باستخدام Enter
+                document.addEventListener('keypress', (e) => {
+                    if (e.target.classList.contains('message-input') && e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+
+                    if (e.target.classList.contains('search-input')) {
+                        setTimeout(() => this.searchUsers(e.target.value), 300);
+                    }
+                });
+            }
+
+            toggleLoginSignup() {
+                const loginTitle = document.getElementById('loginTitle');
+                const loginBtn = document.querySelector('.login-btn');
+                const signupBtn = document.querySelector('.signup-btn');
+                const nameField = document.getElementById('nameField');
+
+                if (loginTitle.textContent.includes('تسجيل الدخول')) {
+                    loginTitle.textContent = 'إنشاء حساب جديد';
+                    loginBtn.classList.add('hidden');
+                    signupBtn.classList.remove('hidden');
+                    nameField.classList.remove('hidden');
+                } else {
+                    loginTitle.textContent = 'تسجيل الدخول';
+                    loginBtn.classList.remove('hidden');
+                    signupBtn.classList.add('hidden');
+                    nameField.classList.add('hidden');
+                }
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    this.showError('يرجى ملء جميع الحقول');
+                    return;
+                }
+
+                try {
+                    await window.firebaseFunctions.signInWithEmailAndPassword(
+                        window.firebase.auth, email, password
+                    );
+                    this.showSuccess('تم تسجيل الدخول بنجاح!');
+                } catch (error) {
+                    this.showError(this.getErrorMessage(error.code));
+                }
+            }
+
+            async handleSignup() {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (!name || !email || !password) {
+                    this.showError('يرجى ملء جميع الحقول');
+                    return;
+                }
+
+                try {
+                    const result = await window.firebaseFunctions.createUserWithEmailAndPassword(
+                        window.firebase.auth, email, password
+                    );
+                    
+                    // تحديث اسم المستخدم
+                    await window.firebaseFunctions.updateProfile(result.user, {
+                        displayName: name
+                    });
+                    
+                    this.showSuccess('تم إنشاء الحساب بنجاح!');
+                } catch (error) {
+                    this.showError(this.getErrorMessage(error.code));
+                }
+            }
+
+            getErrorMessage(errorCode) {
+                const messages = {
+                    'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بالفعل',
+                    'auth/invalid-email': 'بريد إلكتروني غير صالح',
+                    'auth/weak-password': 'كلمة المرور ضعيفة',
+                    'auth/user-not-found': 'لم يتم العثور على المستخدم',
+                    'auth/wrong-password': 'كلمة المرور خاطئة',
+                    'auth/too-many-requests': 'محاولات كثيرة، يرجى المحاولة لاحقاً'
+                };
+                return messages[errorCode] || 'حدث خطأ غير متوقع';
+            }
+
+            async handleLogout() {
+                try {
+                    await window.firebaseFunctions.signOut(window.firebase.auth);
+                    this.showSuccess('تم تسجيل الخروج بنجاح');
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
+            }
+
+            showLogin() {
+                document.getElementById('app').innerHTML = `
+                    <div class="login-container">
+                        <div class="login-box">
+                            <h1 class="login-title" id="loginTitle">تسجيل الدخول</h1>
+                            <div id="messageContainer"></div>
+                            <form class="login-form">
+                                <div class="hidden" id="nameField">
+                                    <input type="text" id="name" class="form-input" placeholder="الاسم الكامل" required>
+                                </div>
+                                <input type="email" id="email" class="form-input" placeholder="البريد الإلكتروني" required>
+                                <input type="password" id="password" class="form-input" placeholder="كلمة المرور" required>
+                                <button type="button" class="btn login-btn">تسجيل الدخول</button>
+                                <button type="button" class="btn btn-secondary signup-btn hidden">إنشاء حساب</button>
+                            </form>
+                            <div class="switch-mode">ليس لديك حساب؟ أنشئ حساب جديد</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            showApp() {
+                document.getElementById('app').innerHTML = `
+                    <div class="app-container">
+                        <header class="header">
+                            <div class="header-logo">Social</div>
+                            <nav class="header-nav">
+                                <div class="nav-item ${this.currentPage === 'home' ? 'active' : ''}" data-page="home">الرئيسية</div>
+                                <div class="nav-item ${this.currentPage === 'messages' ? 'active' : ''}" data-page="messages">الرسائل</div>
+                                <div class="nav-item ${this.currentPage === 'friends' ? 'active' : ''}" data-page="friends">الأصدقاء</div>
+                                <div class="nav-item ${this.currentPage === 'profile' ? 'active' : ''}" data-page="profile">الملف الشخصي</div>
+                            </nav>
+                            <div class="header-user">
+                                <div class="user-avatar">${this.currentUser?.name?.charAt(0) || '?'}</div>
+                                <span>${this.currentUser?.name || 'مستخدم'}</span>
+                                <button class="btn logout-btn">تسجيل الخروج</button>
+                            </div>
+                        </header>
+
+                        <div class="main-content">
+                            <aside class="sidebar">
+                                <div class="sidebar-item ${this.currentPage === 'home' ? 'active' : ''}" data-page="home">
+                                    🏠 الرئيسية
+                                </div>
+                                <div class="sidebar-item ${this.currentPage === 'messages' ? 'active' : ''}" data-page="messages">
+                                    💬 الرسائل
+                                </div>
+                                <div class="sidebar-item ${this.currentPage === 'friends' ? 'active' : ''}" data-page="friends">
+                                    👥 الأصدقاء
+                                </div>
+                                <div class="sidebar-item ${this.currentPage === 'profile' ? 'active' : ''}" data-page="profile">
+                                    👤 الملف الشخصي
+                                </div>
+                            </aside>
+
+                            <main class="content-area">
+                                ${this.renderCurrentPage()}
+                            </main>
+                        </div>
+                    </div>
+                `;
+
+                if (this.currentPage === 'messages') {
+                    this.loadConversations();
+                }
+            }
+
+            renderCurrentPage() {
+                switch (this.currentPage) {
+                    case 'home':
+                        return this.renderHome();
+                    case 'messages':
+                        return this.renderMessages();
+                    case 'friends':
+                        return this.renderFriends();
+                    case 'profile':
+                        return this.renderProfile();
+                    default:
+                        return this.renderHome();
+                }
+            }
+
+            renderHome() {
+                return `
+                    <div class="home-page">
+                        <h2>مرحباً بك في Social!</h2>
+                        <p>هذه هي صفحتك الرئيسية. يمكنك البدء بمشاركة منشوراتك والتواصل مع أصدقائك.</p>
+                        <div style="margin-top: 2rem;">
+                            <h3>ميزات التطبيق:</h3>
+                            <ul style="margin-top: 1rem; padding-right: 1rem;">
+                                <li>💬 نظام رسائل فوري</li>
+                                <li>👥 إدارة الأصدقاء</li>
+                                <li>🔔 إشعارات فورية</li>
+                                <li>📱 تصميم متجاوب</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderMessages() {
+                return `
+                    <div class="messages-page">
+                        <div class="messages-container">
+                            <div class="conversations-sidebar">
+                                <div class="conversations-header">
+                                    <h3>المحادثات</h3>
+                                    <button class="btn new-conversation-btn">+ محادثة جديدة</button>
+                                </div>
+                                <div class="conversations-list" id="conversationsList">
+                                    <!-- سيتم تحميل المحادثات هنا -->
+                                </div>
+                            </div>
+                            <div class="chat-area" id="chatArea">
+                                <div class="empty-chat">
+                                    <div class="empty-chat-icon">💬</div>
+                                    <h3>اختر محادثة لبدء الدردشة</h3>
+                                    <p>اختر من قائمة المحادثات أو ابدأ محادثة جديدة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderFriends() {
+                return `
+                    <div class="friends-page">
+                        <h2>الأصدقاء</h2>
+                        <p>هنا يمكنك إدارة قائمة أصدقائك وإرسال طلبات صداقة جديدة.</p>
+                        <div style="margin-top: 2rem;">
+                            <h3>قائمة الأصدقاء:</h3>
+                            <p style="color: #65676b; margin-top: 1rem;">سيتم إضافة نظام الأصدقاء قريباً...</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderProfile() {
+                return `
+                    <div class="profile-page">
+                        <h2>الملف الشخصي</h2>
+                        <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+                            <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2rem;">
+                                ${this.currentUser?.name?.charAt(0) || '?'}
+                            </div>
+                            <div>
+                                <h3>${this.currentUser?.name || 'مستخدم'}</h3>
+                                <p>${this.currentUser?.email || ''}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>معلومات الحساب:</h3>
+                            <p style="color: #65676b; margin-top: 1rem;">رقم العضو: ${this.currentUser?.uid?.substring(0, 8) || ''}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            changePage(page) {
+                this.currentPage = page;
+                this.showApp();
+            }
+
+            showError(message) {
+                const container = document.getElementById('messageContainer');
+                if (container) {
+                    container.innerHTML = `<div class="error-message">${message}</div>`;
+                    setTimeout(() => container.innerHTML = '', 5000);
+                }
+            }
+
+            showSuccess(message) {
+                const container = document.getElementById('messageContainer');
+                if (container) {
+                    container.innerHTML = `<div class="success-message">${message}</div>`;
+                    setTimeout(() => container.innerHTML = '', 5000);
+                }
+            }
+
+            // نظام الرسائل
+async loadConversations() {
+                const q = window.firebaseFunctions.query(
+                    window.firebaseFunctions.collection(window.firebase.db, 'conversations'),
+                    window.firebaseFunctions.where('participants', 'array-contains', this.currentUser.uid),
+                    window.firebaseFunctions.orderBy('lastMessageTime', 'desc')
+                );
+
+                this.conversationsUnsubscribe = window.firebaseFunctions.onSnapshot(q, (snapshot) => {
+                    this.conversations = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    this.renderConversations();
+                });
+            }
+
+            renderConversations() {
+                const container = document.getElementById('conversationsList');
+                if (!container) return;
+
+                if (this.conversations.length === 0) {
+                    container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #65676b;">لا توجد محادثات</div>';
+                    return;
+                }
+
+                container.innerHTML = this.conversations.map(convo => {
+                    const otherUserId = convo.participants.find(id => id !== this.currentUser.uid);
+                    const otherUser = this.users[otherUserId] || { name: 'مستخدم' };
+                    
+                    return `
+                        <div class="conversation-item" data-conversation-id="${convo.id}" data-user-id="${otherUserId}">
+                            <div class="conversation-avatar">${otherUser.name.charAt(0)}</div>
+                            <div class="conversation-info">
+                                <div class="conversation-name">${otherUser.name}</div>
+                                <div class="conversation-last-message">${convo.lastMessage || 'بدء المحادثة'}</div>
+                            </div>
+                            <div class="conversation-time">
+                                ${convo.lastMessageTime ? this.formatTime(convo.lastMessageTime.toDate()) : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            async openConversation(conversationId, otherUserId) {
+                this.currentConversation = conversationId;
+                
+                // جلب بيانات المستخدم الآخر إذا لم تكن موجودة
+                if (!this.users[otherUserId]) {
+                    try {
+                        const userDoc = await window.firebaseFunctions.getDoc(
+                            window.firebaseFunctions.doc(window.firebase.db, 'users', otherUserId)
+                        );
+                        if (userDoc.exists()) {
+                            this.users[otherUserId] = { id: userDoc.id, ...userDoc.data() };
+                        }
+                    } catch (error) {
+                        console.error('Error loading user:', error);
+                    }
+                }
+
+                this.renderChatWindow(otherUserId);
+                this.loadMessages(conversationId);
+            }
+
+            renderChatWindow(otherUserId) {
+                const otherUser = this.users[otherUserId] || { name: 'مستخدم' };
+                
+                document.getElementById('chatArea').innerHTML = `
+                    <div class="chat-area">
+                        <div class="chat-header">
+                            <div class="chat-user-avatar">${otherUser.name.charAt(0)}</div>
+                            <div>
+                                <div class="chat-user-name">${otherUser.name}</div>
+                                <div class="chat-user-status">متصل الآن</div>
+                            </div>
+                        </div>
+                        <div class="messages-container-inner" id="messagesContainer">
+                            <!-- سيتم تحميل الرسائل هنا -->
+                        </div>
+                        <div class="message-input-area">
+                            <input type="text" class="message-input" placeholder="اكتب رسالة...">
+                            <button class="send-button">إرسال</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            loadMessages(conversationId) {
+                if (this.messagesUnsubscribe) {
+                    this.messagesUnsubscribe();
+                }
+
+                const q = window.firebaseFunctions.query(
+                    window.firebaseFunctions.collection(window.firebase.db, 'messages'),
+                    window.firebaseFunctions.where('conversationId', '==', conversationId),
+                    window.firebaseFunctions.orderBy('timestamp', 'asc')
+                );
+
+                this.messagesUnsubscribe = window.firebaseFunctions.onSnapshot(q, (snapshot) => {
+                    this.messages = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    this.renderMessages();
+                });
+            }
+
+            renderMessages() {
+                const container = document.getElementById('messagesContainer');
+                if (!container) return;
+
+                container.innerHTML = this.messages.map(message => {
+                    const isSent = message.senderId === this.currentUser.uid;
+                    return `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            <div class="message-content">
+                                <div class="message-text">${message.text}</div>
+                                <div class="message-time">
+                                    ${message.timestamp ? this.formatTime(message.timestamp.toDate()) : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // التمرير للأسفل
+                container.scrollTop = container.scrollHeight;
+            }
+
+            async sendMessage() {
+                const input = document.querySelector('.message-input');
+                const text = input?.value.trim();
+
+                if (!text || !this.currentConversation) return;
+
+                try {
+                    await window.firebaseFunctions.addDoc(
+                        window.firebaseFunctions.collection(window.firebase.db, 'messages'),
+                        {
+                            conversationId: this.currentConversation,
+                            senderId: this.currentUser.uid,
+                            text: text,
+                            timestamp: window.firebaseFunctions.serverTimestamp(),
+                            read: false
+                        }
+                    );
+
+                    // تحديث آخر رسالة في المحادثة
+                    await window.firebaseFunctions.updateDoc(
+                        window.firebaseFunctions.doc(window.firebase.db, 'conversations', this.currentConversation),
+                        {
+                            lastMessage: text,
+                            lastMessageTime: window.firebaseFunctions.serverTimestamp()
+                        }
+                    );
+
+                    input.value = '';
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    this.showError('فشل في إرسال الرسالة');
+                }
+            }
+
+            showNewConversation() {
+                document.getElementById('chatArea').innerHTML = `
+                    <div class="new-conversation">
+                        <div class="new-conversation-header">
+                            <button class="back-button">← رجوع</button>
+                            <h3>بدء محادثة جديدة</h3>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="ابحث عن مستخدم..." id="userSearch">
+                        </div>
+                        <div class="search-results" id="searchResults">
+                            <div style="padding: 2rem; text-align: center; color: #65676b;">
+                                ابدأ بالكتابة للبحث عن مستخدمين
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            async searchUsers(searchTerm) {
+                if (!searchTerm || searchTerm.length < 2) {
+                    document.getElementById('searchResults').innerHTML = 
+                        '<div style="padding: 2rem; text-align: center; color: #65676b;">اكتب至少 حرفين للبحث</div>';
+                    return;
+                }
+
+                try {
+                    const usersRef = window.firebaseFunctions.collection(window.firebase.db, 'users');
+                    const q = window.firebaseFunctions.query(
+                        usersRef,
+                        window.firebaseFunctions.where('name', '>=', searchTerm),
+                        window.firebaseFunctions.where('name', '<=', searchTerm + '\uf8ff')
+                    );
+
+                    const querySnapshot = await window.firebaseFunctions.getDocs(q);
+                    const users = [];
+
+                    querySnapshot.forEach((doc) => {
+                        if (doc.id !== this.currentUser.uid) {
+                            users.push({ id: doc.id, ...doc.data() });
+                        }
+                    });
+
+                    this.renderSearchResults(users);
+                } catch (error) {
+                    console.error('Error searching users:', error);
+                    document.getElementById('searchResults').innerHTML = 
+                        '<div class="error-message">فشل في البحث عن المستخدمين</div>';
+                }
+            }
+
+            renderSearchResults(users) {
+                const container = document.getElementById('searchResults');
+                
+                if (users.length === 0) {
+                    container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #65676b;">لا توجد نتائج</div>';
+                    return;
+                }
+
+                container.innerHTML = users.map(user => `
+                    <div class="user-result" data-user-id="${user.id}">
+                        <div class="user-avatar">${user.name.charAt(0)}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            async startConversation(otherUserId) {
+                try {
+                    // التحقق إذا كانت هناك محادثة موجودة مسبقاً
+                    const existingConvo = this.conversations.find(convo => 
+                        convo.participants.includes(otherUserId)
+                    );
+
+                    if (existingConvo) {
+                        this.openConversation(existingConvo.id, otherUserId);
+                        return;
+                    }
+
+                    // إنشاء محادثة جديدة
+                    const conversationRef = await window.firebaseFunctions.addDoc(
+                        window.firebaseFunctions.collection(window.firebase.db, 'conversations'),
+                        {
+                            participants: [this.currentUser.uid, otherUserId],
+                            lastMessage: 'بدء المحادثة',
+                            lastMessageTime: window.firebaseFunctions.serverTimestamp(),
+                            createdAt: window.firebaseFunctions.serverTimestamp()
+                        }
+                    );
+
+                    this.openConversation(conversationRef.id, otherUserId);
+                } catch (error) {
+                    console.error('Error starting conversation:', error);
+                    this.showError('فشل في بدء المحادثة');
+                }
+            }
+
+            showConversations() {
+                this.currentConversation = null;
+                this.renderMessages();
+            }
+
+            formatTime(date) {
+                const now = new Date();
+                const diff = now - date;
+                
+                if (diff < 60000) { // أقل من دقيقة
+                    return 'الآن';
+                } else if (diff < 3600000) { // أقل من ساعة
+                    return Math.floor(diff / 60000) + ' د';
+                } else if (diff < 86400000) { // أقل من يوم
+                    return Math.floor(diff / 3600000) + ' س';
+                } else {
+                    return date.toLocaleDateString('ar-EG');
+                }
+            }
+
+            cleanup() {
+                if (this.conversationsUnsubscribe) {
+                    this.conversationsUnsubscribe();
+                }
+                if (this.messagesUnsubscribe) {
+                    this.messagesUnsubscribe();
+                }
+            }
+        }
+
+        // بدء التطبيق عندما يتم تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            window.socialApp = new SocialApp();
+        });
+    </script>
+</body>
+</html>
